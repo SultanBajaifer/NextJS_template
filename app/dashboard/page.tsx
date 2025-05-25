@@ -1,28 +1,32 @@
-import { Card } from 'app/ui/dashboard/cards';
-import { lusitana } from 'app/ui/fonts';
+import RevenueChart from '@/app/ui/dashboard/revenue-chart';
+import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+import { lusitana } from '@/app/ui/fonts';
+import { fetchCardData } from '@/_lib/data';
+import { Suspense } from 'react';
+import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
+import CardWrapper from '@/components/ui/dashboard/cards';
 
-export default function Page() {
+export default async function Page() {
+  const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard Overview
+        Dashboard
       </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card title="Total Customers" value="1,234" type="customers" />
-        <Card title="Pending Orders" value="12" type="pending" />
-        <Card title="Total Revenue" value="$45,678" type="collected" />
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <Suspense fallback={<CardsSkeleton />}>
+          <CardWrapper />
+        </Suspense>
+
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="p-4 rounded-lg bg-white shadow">
-          <h2 className="mb-4 text-lg font-medium">Recent Activity</h2>
-          {/* Activity content would go here */}
-          <p className="text-gray-500">No recent activity to display</p>
-        </div>
-        <div className="p-4 rounded-lg bg-white shadow">
-          <h2 className="mb-4 text-lg font-medium">Quick Stats</h2>
-          {/* Stats content would go here */}
-          <p className="text-gray-500">Loading statistics...</p>
-        </div>
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+      <Suspense fallback={<RevenueChartSkeleton />}>
+          <RevenueChart />
+        </Suspense>
+        <Suspense fallback={<LatestInvoicesSkeleton />}>
+
+        <LatestInvoices/>
+        </Suspense>
       </div>
     </main>
   );
