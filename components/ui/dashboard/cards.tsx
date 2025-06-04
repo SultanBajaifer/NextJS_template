@@ -1,4 +1,4 @@
-import { fetchCardData } from '@/_lib/data';
+import { fetchCardData } from '@/app/_lib/data';
 import {
   BanknotesIcon,
   ClockIcon,
